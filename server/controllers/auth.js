@@ -20,10 +20,15 @@ export const register = async (req, res) => {
             password: hash
         })
 
+        const token = jwt.sign({
+            id: newUser._id,
+        }, process.env.JWT_SECRET, { expiresIn: '30d' })
+
         await newUser.save()
 
         return res.json({
             newUser,
+            token,
             message: 'Реєстрація пройшла успішно',
         })
     } catch (error) {

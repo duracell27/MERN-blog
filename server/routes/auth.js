@@ -14,6 +14,6 @@ router.post('/login', login)
 
 //Get me
 //http://localhost:3002/api/auth/getMe
-router.post('/getMe', checkAuth, getMe)
+router.get('/getMe', checkAuth, getMe)
 
 export default router
