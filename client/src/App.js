@@ -16,7 +16,7 @@ import { getMe } from "./redux/features/auth/authSlice";
 function App() {
   const dispatch = useDispatch()
   useEffect(() => {
-    dispatch(getMe)
+    dispatch(getMe())
   }, [dispatch])
   return (
     <Layout>

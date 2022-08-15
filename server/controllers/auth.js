@@ -76,6 +76,6 @@ export const getMe = async (req, res) => {
         }, process.env.JWT_SECRET, { expiresIn: '30d' })
         return res.json({ user, token })
     } catch (error) {
-        return res.json({ message: 'Немає доступу' })
+        return res.json({ message: 'Немає доступу controller' })
     }
 }

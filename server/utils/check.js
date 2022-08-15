@@ -1,18 +1,18 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 
-export const checkAuth = (req, res, next) =>{
-    const token = (req.headers.authorization||"").replace(/Bearer\s?/, '')
 
-    if (token){
+export const checkAuth = (req, res, next) => {
+    const token = (req.headers.authorization || "").replace(/Bearer\s?/, '')
+    
+    if (token) {
         try {
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
             req.userId = decoded.id
             next()
         } catch (error) {
-            return res.json({message: 'Немає доступу'})
+            return res.json({ message: 'Немає доступу' })
         }
-    }else{
-        return res.json({message: 'Немає доступу'})
+    } else {
+        return res.json({ message: 'Немає доступу' })
     }
 }

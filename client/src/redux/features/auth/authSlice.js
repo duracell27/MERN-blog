@@ -40,8 +40,8 @@ export const getMe = createAsyncThunk(
     'auth/getMe',
     async () => {
         try {
-            const { data } = await axios.post('/auth/getMe',)
-
+            const { data } = await axios.get('/auth/getMe',)
+            
             return data
         } catch (error) {
             console.log(error)
