@@ -65,3 +65,17 @@ export const getAll = async (req, res) => {
         return res.json({message: 'Щось пішло не так при отриманні всіх постів'})
     }
 }
+
+// get post by id
+
+export const getById = async (req, res) => {
+    try {
+        const post = await Post.findByIdAndUpdate(req.params.id, {
+            $inc: {views: 1}
+        })
+
+        res.json(post)
+    } catch (error) {
+        return res.json({ message: 'Помилка при отриманні поста по ід'})
+    }
+}
