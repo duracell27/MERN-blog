@@ -96,3 +96,18 @@ export const getMyPosts = async (req, res) => {
         return res.json({ message: 'Помилка при отриманні своїх постів'})
     }
 }
+
+// remove post by id
+
+export const removePost = async (req, res) => {
+    try {
+        const post = await Post.findByIdAndDelete(req.params.id)
+        if(!post) return res.json({message: 'Такого посту не знайдено'})
+        await User.findByIdAndUpdate(req.userId, {
+            $pull: {posts: req.params.id}
+        })
+        return res.json({message: 'Пост видалений'})
+    } catch (error) {
+        return res.json({ message: 'Помилка при видаленні поста'})
+    }
+}
