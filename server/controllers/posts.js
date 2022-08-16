@@ -48,3 +48,20 @@ export const createPost = async (req, res) => {
         res.json({ message: 'Щось пішло не так при додаванні посту' })
     }
 }
+
+// get all posts 
+
+export const getAll = async (req, res) => {
+    try {
+        const posts = await Post.find().sort('-createdAt')
+        const popularPosts = await Post.find().limit(5).sort('-views')
+
+        if(!posts){
+            return res.json({ message: 'Постів немає'})
+        }
+
+        return res.json({posts, popularPosts})
+    } catch (error) {
+        return res.json({message: 'Щось пішло не так при отриманні всіх постів'})
+    }
+}
