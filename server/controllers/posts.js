@@ -79,3 +79,20 @@ export const getById = async (req, res) => {
         return res.json({ message: 'Помилка при отриманні поста по ід'})
     }
 }
+
+// get my posts 
+
+export const getMyPosts = async (req, res) => {
+    try {
+        const user = await User.findById(req.userId)
+        const list = await Promise.all(
+            user.posts.map((post)=>{
+                return Post.findById(post._id)
+            })
+        )
+
+        res.json(list)
+    } catch (error) {
+        return res.json({ message: 'Помилка при отриманні своїх постів'})
+    }
+}
