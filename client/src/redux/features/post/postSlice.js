@@ -25,9 +25,10 @@ export const getAllPosts = createAsyncThunk('post/getAllPosts', async () => {
     }
 })
 
-export const removePost = createAsyncThunk('post/removePost', async(id) => {
+export const removePost = createAsyncThunk('post/removePost', async (id) => {
     try {
-        const {data} = await axios.delete(`/posts/${id}`, id)
+        const { data } = await axios.delete(`/posts/${id}`, id)
+        console.log('return data', data)
         return data
     } catch (error) {
         console.log(error)
@@ -53,7 +54,7 @@ export const postSlice = createSlice({
 
         // getallposts reducer
         [getAllPosts.pending]: (state) => {
-            state.loading = true     
+            state.loading = true
         },
         [getAllPosts.fulfilled]: (state, action) => {
             state.loading = false
@@ -66,13 +67,15 @@ export const postSlice = createSlice({
 
         // removePost reducer
         [removePost.pending]: (state) => {
-            state.loading = true     
+            state.loading = true
         },
         [removePost.fulfilled]: (state, action) => {
             state.loading = false
-            state.posts = state.posts.filter((post)=>post._id !== action.payload._id)  
+            state.posts = state.posts.filter((post) => {
+                return post._id !== action.payload.id
+            })
         },
-        [removePost.rejected]: (state, action) => {
+        [removePost.rejected]: (state) => {
             state.loading = false
         },
     }

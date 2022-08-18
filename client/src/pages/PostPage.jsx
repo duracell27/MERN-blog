@@ -30,7 +30,7 @@ export default function PostPage() {
         try {
             dispatch(removePost(params.id))
             toast("Пост видалений")
-            navigate('posts')
+            navigate('/posts')
         } catch (error) {
             console.log(error)
         }

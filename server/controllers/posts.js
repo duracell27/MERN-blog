@@ -106,7 +106,7 @@ export const removePost = async (req, res) => {
         await User.findByIdAndUpdate(req.userId, {
             $pull: {posts: req.params.id}
         })
-        return res.json({message: 'Пост видалений'})
+        return res.json({message: 'Пост видалений', id: req.params.id})
     } catch (error) {
         return res.json({ message: 'Помилка при видаленні поста'})
     }
