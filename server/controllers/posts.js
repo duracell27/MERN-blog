@@ -56,13 +56,13 @@ export const getAll = async (req, res) => {
         const posts = await Post.find().sort('-createdAt')
         const popularPosts = await Post.find().limit(5).sort('-views')
 
-        if(!posts){
-            return res.json({ message: 'Постів немає'})
+        if (!posts) {
+            return res.json({ message: 'Постів немає' })
         }
 
-        return res.json({posts, popularPosts})
+        return res.json({ posts, popularPosts })
     } catch (error) {
-        return res.json({message: 'Щось пішло не так при отриманні всіх постів'})
+        return res.json({ message: 'Щось пішло не так при отриманні всіх постів' })
     }
 }
 
@@ -71,12 +71,12 @@ export const getAll = async (req, res) => {
 export const getById = async (req, res) => {
     try {
         const post = await Post.findByIdAndUpdate(req.params.id, {
-            $inc: {views: 1}
+            $inc: { views: 1 }
         })
 
         res.json(post)
     } catch (error) {
-        return res.json({ message: 'Помилка при отриманні поста по ід'})
+        return res.json({ message: 'Помилка при отриманні поста по ід' })
     }
 }
 
@@ -86,14 +86,14 @@ export const getMyPosts = async (req, res) => {
     try {
         const user = await User.findById(req.userId)
         const list = await Promise.all(
-            user.posts.map((post)=>{
+            user.posts.map((post) => {
                 return Post.findById(post._id)
             })
         )
 
         res.json(list)
     } catch (error) {
-        return res.json({ message: 'Помилка при отриманні своїх постів'})
+        return res.json({ message: 'Помилка при отриманні своїх постів' })
     }
 }
 
@@ -102,12 +102,36 @@ export const getMyPosts = async (req, res) => {
 export const removePost = async (req, res) => {
     try {
         const post = await Post.findByIdAndDelete(req.params.id)
-        if(!post) return res.json({message: 'Такого посту не знайдено'})
+        if (!post) return res.json({ message: 'Такого посту не знайдено' })
         await User.findByIdAndUpdate(req.userId, {
-            $pull: {posts: req.params.id}
+            $pull: { posts: req.params.id }
         })
-        return res.json({message: 'Пост видалений', id: req.params.id})
+        return res.json({ message: 'Пост видалений', id: req.params.id })
     } catch (error) {
-        return res.json({ message: 'Помилка при видаленні поста'})
+        return res.json({ message: 'Помилка при видаленні поста' })
+    }
+}
+
+// update post
+export const updatePost = async (req, res) => {
+    try {
+        const { title, text, id } = req.body
+        const post = await Post.findById(id)
+
+        if (req.files) {
+            let fileName = Date.now().toString() + req.files.image.name
+            const __dirname = dirname(fileURLToPath(import.meta.url))
+            req.files.image.mv(path.join(__dirname, '..', 'uploads', fileName))
+            post.imgUrl = fileName || ''
+        }
+
+        post.title = title
+        post.text = text
+
+        await post.save()
+        return res.json(post)
+
+    } catch (error) {
+        return res.json({ message: 'Помилка при оновленні поста' })
     }
 }

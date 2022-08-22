@@ -23,7 +23,7 @@ export default function Navbar() {
             </span>
             {isAuth && (<ul className="flex gap-8">
                 <li><NavLink to={'/'} style={({ isActive }) => isActive ? activeLink : undefined} className="text-sm text-gray-400 hover:text-white">Головна</NavLink></li>
-                <li><NavLink to={'/posts'} style={({ isActive }) => isActive ? activeLink : undefined} className="text-sm text-gray-400 hover:text-white">Моі пости</NavLink></li>
+                <li><NavLink to={'/posts'} style={({ isActive }) => isActive ? activeLink : undefined} className="text-sm text-gray-400 hover:text-white">Мої пости</NavLink></li>
                 <li><NavLink to={'/new'} style={({ isActive }) => isActive ? activeLink : undefined} className="text-sm text-gray-400 hover:text-white">Додати пост</NavLink></li>
             </ul>)}
 

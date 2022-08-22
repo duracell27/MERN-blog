@@ -26,7 +26,7 @@ export default function PostPage() {
         fetchPost()
     }, [fetchPost])
 
-    const removePostHandler = () =>{
+    const removePostHandler = () => {
         try {
             dispatch(removePost(params.id))
             toast("Пост видалений")
@@ -73,10 +73,12 @@ export default function PostPage() {
                                 user?._id === post.author && (
                                     <div className="flex gap-3 mt-4">
                                         <button className='flex items-center justify-center gap-2 text-sm text-white opacity-50'>
-                                            <AiTwotoneEdit />
+                                            <Link to={`/${params.id}/edit`}>
+                                                <AiTwotoneEdit />
+                                            </Link>
                                         </button>
                                         <button onClick={removePostHandler} className='flex items-center justify-center gap-2 text-sm text-white opacity-50'>
-                                            <AiFillDelete /> 
+                                            <AiFillDelete />
                                         </button>
                                     </div>
                                 )

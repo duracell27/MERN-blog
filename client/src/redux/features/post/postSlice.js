@@ -28,7 +28,17 @@ export const getAllPosts = createAsyncThunk('post/getAllPosts', async () => {
 export const removePost = createAsyncThunk('post/removePost', async (id) => {
     try {
         const { data } = await axios.delete(`/posts/${id}`, id)
-        console.log('return data', data)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+export const updatePost = createAsyncThunk('post/updatePost', async (updatedPost) => {
+    try {
+        
+        const { data } = await axios.put(`/posts/${updatedPost.id}`, updatedPost)
+
         return data
     } catch (error) {
         console.log(error)
@@ -78,7 +88,22 @@ export const postSlice = createSlice({
         [removePost.rejected]: (state) => {
             state.loading = false
         },
+
+        // updatepost reducer
+        [updatePost.pending]: (state) => {
+            state.loading = true
+        },
+        [updatePost.fulfilled]: (state, action) => {
+            state.loading = false
+            const index = state.posts.findIndex((post)=>post._id === action.payload._id)
+            state.posts[index] = action.payload
+        },
+        [updatePost.rejected]: (state) => {
+            state.loading = false
+        },
     }
 })
+
+
 
 export default postSlice.reducer

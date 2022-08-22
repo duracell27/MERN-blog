@@ -1,18 +1,18 @@
 import axios from '../utils/axios'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PostItem from '../components/PostItem'
 
 export default function PostsPage() {
     const [posts, setPosts] = useState([])
 
-    const fetchMyPost = async () => {
+    const fetchMyPost = useCallback(async () => {
         const { data } = await axios.get(`/posts/user/me`)
         setPosts(data)
-    }
+    },[])
 
     useEffect(() => {
         fetchMyPost()
-    }, [])
+    }, [fetchMyPost])
 
     if (!posts) {
         return (<div className="text-sm text-center text-white py-10">Тут ще немає поста</div>)
