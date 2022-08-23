@@ -26,7 +26,7 @@ export default function PostItem({ post }) {
                     <AiFillEye /> <span>{post.views}</span>
                 </button>
                 <button className='flex items-center justify-center gap-2 text-sm text-white opacity-50'>
-                    <AiOutlineMessage /> <span>{post.components?.length || '0'}</span>
+                    <AiOutlineMessage /> <span>{post.comments?.length || '0'}</span>
                 </button>
             </div>
         </div>

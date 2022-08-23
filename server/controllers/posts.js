@@ -2,6 +2,7 @@ import Post from "../models/Post.js";
 import User from "../models/User.js";
 import path, { dirname } from 'path';
 import { fileURLToPath } from "url";
+import Comment from "../models/Comment.js";
 
 //Create post
 
@@ -133,5 +134,21 @@ export const updatePost = async (req, res) => {
 
     } catch (error) {
         return res.json({ message: 'Помилка при оновленні поста' })
+    }
+}
+
+// get post by id
+
+export const getPostComments = async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.id)
+        const list = await Promise.all(
+            post.comments.map((comment) => {
+                return Comment.findById(comment._id)
+            })
+        )
+        res.json(list)
+    } catch (error) {
+        return res.json({ message: 'Помилка при отриманні коментарів до поста' })
     }
 }

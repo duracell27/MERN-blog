@@ -7,15 +7,19 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { removePost } from '../redux/features/post/postSlice'
 import { toast } from 'react-toastify'
+import { createComment, getPostComments } from '../redux/features/comment/commentSlice'
+import CommentItem from '../components/CommentItem'
 
 export default function PostPage() {
 
     const [post, setPost] = useState(null)
+    const [comment, setComment] = useState('')
 
     const params = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const { user } = useSelector(state => state.auth)
+    const { comments } = useSelector(state => state.comment)
 
     const fetchPost = useCallback(async () => {
         const { data } = await axios.get(`/posts/${params.id}`)
@@ -26,6 +30,8 @@ export default function PostPage() {
         fetchPost()
     }, [fetchPost])
 
+    
+
     const removePostHandler = () => {
         try {
             dispatch(removePost(params.id))
@@ -35,6 +41,24 @@ export default function PostPage() {
             console.log(error)
         }
     }
+
+    const submitHandler = () => {
+        try {
+            const postId = params.id
+            dispatch(createComment({ postId, comment }))
+            setComment('')
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchComments = useCallback(async () => {
+        dispatch(getPostComments(params.id))
+    }, [params.id, dispatch])
+
+    useEffect(() => {
+        fetchComments()
+    }, [fetchComments])
 
     if (!post) {
         return (<div className="text-sm text-center text-white py-10">Тут ще немає поста</div>)
@@ -66,7 +90,7 @@ export default function PostPage() {
                                     <AiFillEye /> <span>{post.views}</span>
                                 </button>
                                 <button className='flex items-center justify-center gap-2 text-sm text-white opacity-50'>
-                                    <AiOutlineMessage /> <span>{post.components?.length || '0'}</span>
+                                    <AiOutlineMessage /> <span>{post.comments?.length || '0'}</span>
                                 </button>
                             </div>
                             {
@@ -86,7 +110,16 @@ export default function PostPage() {
                         </div>
                     </div>
                 </div>
-                <div className="w-1/3">COMMENTS</div>
+                <div className="w-1/3 p-8 bg-gray-700 flex flex-col gap-2 rounded-sm">
+                    <form className='flex gap-2' onSubmit={(e) => e.preventDefault()}>
+                        <input type='text' value={comment} onChange={(e) => setComment(e.target.value)} placeholder='Комент' className='text-black w-full rounded-sm bg-gray-400 border p-2 text-sm outline-none placeholder:text-gray-700' />
+                        <button className='flex justify-center items-center bg-gray-600 text-white text-sm rounded-sm py-2 px-4' onClick={submitHandler}>Відправити</button>
+                    </form>
+
+                    {comments?.map(comment =>(
+                        <CommentItem key={comment._id} comment={comment} />
+                    ))}
+                </div>
             </div>
         </div>
     )
